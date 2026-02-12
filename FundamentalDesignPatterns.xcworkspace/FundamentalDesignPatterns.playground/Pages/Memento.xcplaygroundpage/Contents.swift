@@ -33,7 +33,7 @@ public class Game: Codable {
         state.score += 9002
     }
 
-    public func monsterEatPlayer() {
+    public func monsterEatsPlayer() {
         state.attempsRemaining -= 1
     }
 
@@ -43,7 +43,7 @@ public class Game: Codable {
 
 typealias GameMemento = Data
 
-// MAR: - Care Taker
+// MARK: - CareTaker
 
 public class GameSystem {
 
@@ -59,15 +59,15 @@ public class GameSystem {
 
     // MARK: - Instance Methods
 
-    public func save(_ game: Game, title: String) throws {
-        let data = try encoder.encode(game)
+    public func save<T: Codable>(_ object: T, title: String) throws {
+        let data: GameMemento = try encoder.encode(object)
 
         userDefaults.set(data, forKey: title)
     }
 
-    public func load(title: String) throws -> Game {
-        guard let data = userDefaults.data(forKey: title),
-            let game = try? decoder.decode(Game.self, from: data)
+    public func load<T: Codable>(_ type: T.Type, title: String) throws -> T {
+        guard let data = userDefaults.data(forKey: title) as? GameMemento,
+            let game = try? decoder.decode(T.self, from: data)
         else {
             throw GameError.gameNotFound
         }
@@ -77,19 +77,29 @@ public class GameSystem {
 
 }
 
+// First Game
+
 var game = Game()
 
-game.monsterEatPlayer()
+game.monsterEatsPlayer()
 game.rackUpMassivePoints()
+
+// Save Game
 
 let gameSystem = GameSystem()
 
+print("First Game Score: ", game.state.score)
+
 try gameSystem.save(game, title: "Best Game Ever")
+
+// Second Game
 
 game = Game()
 
-print("New Game Score: ", game.state.score)
+print("Second Game Score: ", game.state.score)
 
-game = try gameSystem.load(title: "Best Game Ever")
+// Load Game
+
+game = try gameSystem.load(Game.self, title: "Best Game Ever")
 
 print("Loaded Game Score: ", game.state.score)
