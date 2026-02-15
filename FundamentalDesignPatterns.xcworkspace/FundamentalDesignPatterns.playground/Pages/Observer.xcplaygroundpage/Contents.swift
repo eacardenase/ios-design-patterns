@@ -50,12 +50,54 @@ kvoObserver = nil
 
 kvoUser.name = "Luisa"
 
+// MARK: - Observable Wrapper
+
+public class ObservableUser {
+
+    // MARK: - Properties
+
+    public let name: Observable<String>
+
+    // MARK: - Object Lifecycle
+
+    public init(name: String) {
+        self.name = Observable(name)
+    }
+
+}
+
+public class Observer {}
+
+print("\n--- Observable Example ---\n")
+
+let observableUser = ObservableUser(name: "Edwin")
+var observer: Observer? = Observer()
+
+observableUser.name.addObserver(
+    observer!,
+    options: [.initial, .new]
+) {
+    (value, change) in
+    print("User's name is \(value)")
+    print("Change: \(change)")
+}
+
+observableUser.name.value = "Amelia"
+
+observer = nil
+
+observableUser.name.value = "Alice"
+
 // MARK: - Combine
 
 public class User {
 
+    // MARK: - Properties
+
     @Published var name: String
     var age = 29
+
+    // MARK: - Object Lifecycle
 
     public init(name: String) {
         self.name = name
