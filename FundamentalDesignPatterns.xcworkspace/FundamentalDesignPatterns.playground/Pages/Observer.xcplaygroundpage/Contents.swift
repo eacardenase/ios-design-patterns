@@ -11,7 +11,46 @@
 
  ## Code Example
  */
-import Combine
+//import Combine
+import Foundation
+
+// MARK: - KVO
+
+@objcMembers class KVOUser: NSObject {
+
+    // MARK: - Properties
+
+    dynamic var name: String
+
+    // MARK: - Object Lifecycle
+
+    public init(name: String) {
+        self.name = name
+    }
+
+}
+
+print("\n--- KVO Example ---\n")
+
+// subject
+let kvoUser = KVOUser(name: "Edwin")
+
+// observer
+var kvoObserver: NSKeyValueObservation? = kvoUser.observe(
+    \.name,
+    options: [.initial, .old, .new]
+) { user, change in
+    print("User's name is \(user.name)")
+    print("Change: \(change)")
+}
+
+kvoUser.name = "Alexander"
+
+kvoObserver = nil
+
+kvoUser.name = "Luisa"
+
+// MARK: - Combine
 
 public class User {
 
@@ -21,21 +60,22 @@ public class User {
     public init(name: String) {
         self.name = name
     }
+
 }
 
-let user = User(name: "Edwin")
-let publisher = user.$name
-var suscriber: AnyCancellable? = publisher.sink {
-    print("User's name is \($0)")
-}
-
-let anotherSuscriber = publisher.sink {
-    print("Another subscriber \($0)")
-}
-
-user.name = "Luisa"
-
-user.age = 30
-
-suscriber = nil
-user.name = "Edwin left the chat group"
+//let user = User(name: "Edwin")
+//let publisher = user.$name
+//var suscriber: AnyCancellable? = publisher.sink {
+//    print("User's name is \($0)")
+//}
+//
+//let anotherSuscriber = publisher.sink {
+//    print("Another subscriber \($0)")
+//}
+//
+//user.name = "Luisa"
+//
+//user.age = 30
+//
+//suscriber = nil
+//user.name = "Edwin left the chat group"
