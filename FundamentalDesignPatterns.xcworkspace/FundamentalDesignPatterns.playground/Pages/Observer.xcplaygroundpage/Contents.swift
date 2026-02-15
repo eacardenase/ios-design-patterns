@@ -11,7 +11,7 @@
 
  ## Code Example
  */
-//import Combine
+import Combine
 import Foundation
 
 // MARK: - KVO
@@ -105,19 +105,49 @@ public class User {
 
 }
 
-//let user = User(name: "Edwin")
-//let publisher = user.$name
-//var suscriber: AnyCancellable? = publisher.sink {
-//    print("User's name is \($0)")
-//}
-//
-//let anotherSuscriber = publisher.sink {
-//    print("Another subscriber \($0)")
-//}
-//
-//user.name = "Luisa"
-//
-//user.age = 30
-//
-//suscriber = nil
-//user.name = "Edwin left the chat group"
+let user = User(name: "Edwin")
+let publisher = user.$name
+var suscriber: AnyCancellable? = publisher.sink {
+    print("User's name is \($0)")
+}
+
+let anotherSuscriber = publisher.sink {
+    print("Another subscriber \($0)")
+}
+
+user.name = "Luisa"
+
+suscriber = nil
+user.name = "Edwin left the chat group"
+
+// MARK: - Custom Observable
+
+print("\n--- Custom Observable ---\n")
+
+public class CustomObservableUser {
+
+    // MARK: - Properties
+
+    @CustomPublished public var name: String
+
+    // MARK: - Object Lifecycle
+
+    public init(name: String) {
+        self.name = name
+    }
+
+}
+
+let customObservableUser = CustomObservableUser(name: "Edwin")
+let customPublisher = customObservableUser.$name
+let customSubscriber = customPublisher.sink {
+    print("CustomObservableUser's name is \($0)")
+}
+
+let anotherCustomSubscriber = customPublisher.sink {
+    print("Another subscriber invocation for \($0)")
+}
+
+customObservableUser.name = "Alexander"
+customObservableUser.name = "Luisa"
+customObservableUser.name = "Irene"
