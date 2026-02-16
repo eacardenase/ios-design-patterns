@@ -144,10 +144,10 @@ let customSubscriber = customPublisher.sink {
     print("CustomObservableUser's name is \($0)")
 }
 
-let anotherCustomSubscriber = customPublisher.sink {
-    print("Another subscriber invocation for \($0)")
-}
+//let anotherCustomSubscriber = customPublisher.sink {
+//    print("Another subscriber invocation for \($0)")
+//}
 
 customObservableUser.name = "Alexander"
-customObservableUser.name = "Luisa"
-customObservableUser.name = "Irene"
+//customObservableUser.name = "Luisa"
+//customObservableUser.name = "Irene"

@@ -26,6 +26,7 @@ import Foundation
     public var value: T {
         didSet {
             publisher.callbacks.forEach { closure in
+                closure(oldValue)
                 closure(value)
             }
         }
