@@ -88,7 +88,7 @@ public class HamburgerBuilder {
         toppings.insert(topping)
     }
 
-    public func removeSauces(_ topping: Toppings) {
+    public func removeToppings(_ topping: Toppings) {
         toppings.remove(topping)
     }
 
