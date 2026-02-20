@@ -4,4 +4,7 @@
    <FileRef
       location = "group:FundamentalDesignPatterns.xcworkspace/FundamentalDesignPatterns.playground">
    </FileRef>
+   <FileRef
+      location = "group:FundamentalDesignPatterns.xcworkspace/IntermediateDesignPatterns.playground">
+   </FileRef>
 </Workspace>
