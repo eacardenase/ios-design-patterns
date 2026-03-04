@@ -60,8 +60,8 @@ extension Queue: Sequence {
 }
 
 public struct Ticket {
-    enum PriorityType {
-        case low
+    enum PriorityType: Int {
+        case low = 0
         case medium
         case high
     }
@@ -72,11 +72,7 @@ public struct Ticket {
 
 extension Ticket {
     var sortIndex: Int {
-        switch self.priority {
-        case .low: 0
-        case .medium: 1
-        case .high: 2
-        }
+        return priority.rawValue
     }
 }
 
@@ -118,6 +114,6 @@ print()
 
 print("Tickets sorted by priority:")
 
-for ticket in sortedTickets {
+for ticket in sortedQueue {
     print(ticket?.description ?? "No Description")
 }
