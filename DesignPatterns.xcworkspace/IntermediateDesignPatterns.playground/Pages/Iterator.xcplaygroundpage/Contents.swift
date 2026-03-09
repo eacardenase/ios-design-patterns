@@ -15,6 +15,8 @@
  */
 import Foundation
 
+// MARK: - Queue
+
 public struct Queue<T> {
     private var array: [T?] = []
     private var head = 0
@@ -116,4 +118,84 @@ print("Tickets sorted by priority:")
 
 for ticket in sortedQueue {
     print(ticket?.description ?? "No Description")
+}
+
+// MARK: - Stack
+
+struct Stack<Element> {
+    var items = [Element]()
+
+    mutating func push(_ element: Element) {
+        items.append(element)
+    }
+
+    mutating func pop() -> Element? {
+        return items.popLast()
+    }
+
+    func map<T>(_ transform: (Element) -> T) -> Stack<T> {
+        var mappedItems = [T]()
+
+        for item in items {
+            mappedItems.append(transform(item))
+        }
+
+        return Stack<T>(items: mappedItems)
+    }
+}
+
+// MARK: - IteratorProtocol
+
+struct StackIterator<T>: IteratorProtocol {
+    typealias Element = T
+
+    var stack = Stack<T>()
+
+    mutating func next() -> Element? {
+        return stack.pop()
+    }
+}
+
+// MARK: - Sequence
+
+extension Stack: Sequence {
+    typealias Iterator = StackIterator<Element>
+
+    func makeIterator() -> Iterator {
+        return StackIterator(stack: self)
+    }
+}
+
+var intStack = Stack<Int>()
+intStack.push(1)
+intStack.push(2)
+
+var doubleStack = intStack.map { $0 * 2 }
+
+//print(String(describing: intStack.pop()))
+//print(String(describing: intStack.pop()))
+//print(String(describing: intStack.pop()))
+//
+//print(String(describing: doubleStack.pop()))
+//print(String(describing: doubleStack.pop()))
+
+var stringStack = Stack<String>()
+stringStack.push("This is a string")
+stringStack.push("Another string")
+
+//print(String(describing: stringStack.pop()))
+
+var myStack = Stack<Int>()
+myStack.push(10)
+myStack.push(20)
+myStack.push(30)
+
+var myStackIterator = StackIterator(stack: myStack)
+
+while let value = myStackIterator.next() {
+    print("got \(value)")
+}
+
+for value in myStack {
+    print("got \(value)")
 }
