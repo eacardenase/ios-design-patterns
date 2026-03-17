@@ -26,44 +26,47 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-public class MulticastDelegate<T> {
-  
-  // MARK: - DelegateWrapper
-  private class DelegateWrapper {
-    
-    weak var delegate: AnyObject?
-    
-    init(_ delegate: AnyObject) {
-      self.delegate = delegate
+public class MulticastDelegate<ProtocolType> {
+    // MARK: - DelegateWrapper
+
+    private class DelegateWrapper {
+        weak var delegate: AnyObject?
+
+        init(_ delegate: AnyObject) {
+            self.delegate = delegate
+        }
     }
-  }
-  
-  // MARK: - Instance Properties
-  public var delegates: [T] {
-    delegateWrappers = delegateWrappers.filter { $0.delegate != nil }
-    return delegateWrappers.map { $0.delegate! } as! [T]
-  }
-  private var delegateWrappers: [DelegateWrapper] = []
-  
-  // MARK: - Object Lifecycle
-  public init() { }
-  
-  // MARK: - Delegate Management
-  public func addDelegate(_ delegate: T) {
-    let wrapper = DelegateWrapper(delegate as AnyObject)
-    delegateWrappers.append(wrapper)
-  }
-  
-  public func removeDelegate(_ removeDelegate: T) {
-    guard let index = delegateWrappers.index(where: {
-      $0.delegate === (removeDelegate as AnyObject)
-    }) else {
-      return
+
+    // MARK: - Properties
+
+    private var delegateWrappers: [DelegateWrapper]
+    public var delegates: [ProtocolType] {
+        return delegateWrappers.compactMap { $0.delegate as? ProtocolType }
     }
-    delegateWrappers.remove(at: index)
-  }
-  
-  public func invokeDelegates(_ closure: (T) -> ()) {
-    delegates.forEach { closure($0) }
-  }
+
+    // MARK: - Object Lifecycle
+
+    public init(delegates: [ProtocolType] = []) {
+        delegateWrappers = delegates.map { DelegateWrapper($0 as AnyObject) }
+    }
+
+    // MARK: - Delegate Management
+
+    public func add(_ delegate: ProtocolType) {
+        delegateWrappers = delegateWrappers.compactMap { $0 }
+
+        delegateWrappers.append(DelegateWrapper(delegate as AnyObject))
+    }
+
+    public func remove(_ delegate: ProtocolType) {
+        if let index = delegateWrappers.firstIndex(where: {
+            $0.delegate === (delegate as AnyObject)
+        }) {
+            delegateWrappers.remove(at: index)
+        }
+    }
+
+    public func invokeDelegates(_ closure: (ProtocolType) -> Void) {
+        delegates.forEach { closure($0) }
+    }
 }
