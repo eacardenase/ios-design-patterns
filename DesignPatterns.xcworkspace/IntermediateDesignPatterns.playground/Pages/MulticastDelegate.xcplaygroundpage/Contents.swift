@@ -65,6 +65,7 @@ dispatch.multicastDelegate.invokeDelegates {
 
 print()
 
+// dispatch.multicastDelegate.remove(fireStation)
 fireStation = nil
 
 dispatch.multicastDelegate.invokeDelegates {
